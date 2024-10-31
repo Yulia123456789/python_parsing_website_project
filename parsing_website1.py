@@ -2,36 +2,30 @@ import requests
 from bs4 import BeautifulSoup
 from time import sleep
 
-
-list_card_url = []
 headers= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:131.0) Gecko/20100101 Firefox/131.0'}
-for count in range(1, 2):
-    sleep(3)
-    url = f'https://scrapingclub.com/exercise/list_basic/page={count}'
+def get_url():
 
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'lxml') #lxml парсер кода
+    for count in range(1, 7):
 
-    data = soup.find_all('div', class_='w-full rounded border')
+        url = f'https://scrapingclub.com/exercise/list_basic/page={count}'
 
-    # for i in data:
-    #
-    #     name = i.find('h4').text
-    #
-    #     price = i.find('h5').text
-    #
-    #     url_img = "https://scrapingclub.com" + i.find("img").get("src")
-    #
-    #     print(name.replace('\n', ''), price, url_img)
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.text, 'lxml') #lxml парсер кода
 
-    for i in data:
-        card_url = "https://scrapingclub.com" + i.find('a').get('href')
-        list_card_url.append(card_url)
+        data = soup.find_all('div', class_='w-full rounded border')
 
 
-for card_url in list_card_url:
+
+        for i in data:
+            card_url = "https://scrapingclub.com" + i.find('a').get('href')
+            yield card_url
+
+
+for card_url in get_url():
 
     response = requests.get(card_url, headers=headers)
+
+    sleep(3)
     soup = BeautifulSoup(response.text, 'lxml') #lxml парсер кода
 
     data = soup.find('div', class_='my-8 w-full rounded border')
