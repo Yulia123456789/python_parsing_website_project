@@ -40,3 +40,4 @@ def array():
         url_img = "https://scrapingclub.com" + data.find("img").get("src")
 
         yield name, price, text, url_img
+
